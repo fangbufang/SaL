@@ -1,5 +1,5 @@
 model_config:
-  latr_noposition_embeds:
+  sal:
     lr_scale_frcn: 0.1
     lr_scale_text_t5: 0.1
     lr_scale_ocr_t5: 0.1

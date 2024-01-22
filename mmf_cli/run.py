@@ -140,7 +140,7 @@ if __name__ == "__main__":
     os.environ['TORCH_DISTRIBUTED_DEBUG'] = 'DETAIL' 
     # run(["config=projects/latr/configs/latr/defaults.yaml","run_type=val","checkpoint.resume_file=./save/latr/models/model_48000.ckpt","training.batch_size=64","training.seed=1","datasets=latr", "model=latr" ])
     
-    # run(["config=projects/latr_noposition_embeds/configs/stvqa/defaults.yaml","run_type=train","training.batch_size=4","training.seed=1","training.num_workers=2","datasets=stvqa", "model=latr" ])
-    # run(["config=projects/latr_noposition_embeds/configs/latr/with_stvqa.yaml","run_type=train","training.num_workers=1","training.batch_size=4","training.seed=1","datasets=latr", "model=latr_noposition_embeds" ])
-    # run(["config=projects/latr_noposition_embeds/configs/latr/pretrain.yaml","run_type=val","training.num_workers=1","checkpoint.resume_file=./save/pretrain/models/model_48000.ckpt","training.batch_size=4","training.seed=1","datasets=latr", "model=latr_noposition_embeds","model_config.latr_noposition_embeds.pretrain=True","dataset_config.latr.pretrain=True" ])
+    # run(["config=projects/sal/configs/stvqa/defaults.yaml","run_type=train","training.batch_size=4","training.seed=1","training.num_workers=2","datasets=stvqa", "model=latr" ])
+    # run(["config=projects/sal/configs/latr/with_stvqa.yaml","run_type=train","training.num_workers=1","training.batch_size=4","training.seed=1","datasets=latr", "model=sal" ])
+    # run(["config=projects/sal/configs/latr/pretrain.yaml","run_type=val","training.num_workers=1","checkpoint.resume_file=./save/pretrain/models/model_48000.ckpt","training.batch_size=4","training.seed=1","datasets=latr", "model=sal","model_config.sal.pretrain=True","dataset_config.latr.pretrain=True" ])
     run(["config=projects/sal/configs/textvqa/adam.yaml","env.save_dir=./save/no_predict","run_type=val","training.num_workers=1","training.batch_size=24","datasets=sal_textvqa", "model=sal" ])

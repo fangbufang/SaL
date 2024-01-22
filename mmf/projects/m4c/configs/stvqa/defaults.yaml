@@ -27,7 +27,7 @@ dataset_config:
       answer_processor:
         type: m4c_answer
         params:
-          vocab_file: stvqa/defaults/extras/vocabs/fixed_answer_vocab_stvqa_5k.txt
+          vocab_file: /data/fcy/sal//fixed_answer_vocab_stvqa_5k.txt
           preprocessor:
             type: simple_word
             params: {}

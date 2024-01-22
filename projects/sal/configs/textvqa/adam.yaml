@@ -1,62 +1,61 @@
 model_config:
-  m4c:
+  sal:
+    pretrain: False
     losses:
     - type: m4c_decoding_bce_with_mask
 
 dataset_config:
-  stvqa:
-    zoo_requirements:
-    - stvqa.defaults
-    - stvqa.ocr_en
+  sal_textvqa:
+    pretrain: False
+
     features:
+
       train:
-      - stvqa/defaults/features/detectron.lmdb,stvqa/ocr_en/features/ocr_en_frcn_features.lmdb
+      - /data/fcy/sal/data/textvqa/new_label_textvqa_obj_round.lmdb,/data/fcy/sal/data/textvqa/ocr_en/features/amazon_frcnn_latr1110.lmdb
+
       val:
-      - stvqa/defaults/features/detectron.lmdb,stvqa/ocr_en/features/ocr_en_frcn_features.lmdb
+
+      - /data/fcy/sal/data/textvqa/new_label_textvqa_obj_round.lmdb,/data/fcy/sal/data/textvqa/ocr_en/features/amazon_frcnn_latr1110.lmdb
       test:
-      - stvqa/defaults/features/detectron.lmdb,stvqa/ocr_en/features/ocr_en_frcn_features.lmdb
+      - /data/fcy/sal/data/textvqa/new_label_textvqa_obj_round.lmdb,/data/fcy/sal/data/textvqa/ocr_en/features/amazon_frcnn_latr1110.lmdb
+    
+    annotations:
+        train:
+        - /data/fcy/sal/data/textvqa/defaults/annotations/train_amazon_ocr.npy
+     
+        val:
+    
+        - /data/fcy/sal/data/textvqa/defaults/annotations/val_amazon_ocr.npy
+        test:
+        - /data/fcy/sal/data/textvqa/defaults/annotations/test_amazon_ocr.npy
+    max_features: 512
+    
     processors:
-      text_processor:
-        type: bert_tokenizer
-        params:
-          tokenizer_config:
-            type: bert-base-uncased
-            params:
-              do_lower_case: true
-          max_seq_length: 20
+    
       answer_processor:
-        type: m4c_answer
+        type: latr_answer
         params:
-          vocab_file: /data/fcy/sal//fixed_answer_vocab_stvqa_5k.txt
+          vocab_file: /data/fcy/sal/fixed_answer_vocab_textvqa_5k.txt
           preprocessor:
             type: simple_word
             params: {}
           context_preprocessor:
             type: simple_word
             params: {}
-          max_length: 50
-          max_copy_steps: 12
+          max_length: 512
+          max_copy_steps: 24
           num_answers: 10
       copy_processor:
         type: copy
         params:
-          max_length: 100
-      phoc_processor:
-        type: phoc
-        params:
-          max_length: 50
-      context_processor:
-        type: fasttext
-        params:
-          max_length: 50
-          model_file: wiki.en.bin
+          max_length: 512
       ocr_token_processor:
         type: simple_word
         params: {}
       bbox_processor:
         type: bbox
         params:
-          max_length: 50
+          max_length: 512
     return_features_info: true
     use_ocr: true
     use_ocr_info: true
@@ -71,8 +70,8 @@ optimizer:
 
 evaluation:
   metrics:
-  - stvqa_accuracy
-  - stvqa_anls
+  - sal_textvqa_accuracy
+
 
 training:
     clip_norm_mode: all
@@ -86,10 +85,10 @@ training:
     use_warmup: true
     warmup_factor: 0.2
     warmup_iterations: 1000
-    max_updates: 24000
+    max_updates: 60000
     batch_size: 128
     num_workers: 4
     task_size_proportional_sampling: true
     early_stop:
-      criteria: stvqa/stvqa_accuracy
+      criteria: sal/sal_textvqa_accuracy
       minimize: false

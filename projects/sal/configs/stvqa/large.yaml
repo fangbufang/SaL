@@ -1,31 +1,37 @@
 model_config:
-  m4c:
+  sal:
     losses:
     - type: m4c_decoding_bce_with_mask
 
 dataset_config:
   stvqa:
-    zoo_requirements:
-    - stvqa.defaults
-    - stvqa.ocr_en
+    # zoo_requirements:
+    # - stvqa.defaults
+    # - stvqa.ocr_en
     features:
+
+      
       train:
-      - stvqa/defaults/features/detectron.lmdb,stvqa/ocr_en/features/ocr_en_frcn_features.lmdb
+      - /data/fcy/sal/data/datasets/stvqa/defaults/features/stvqa_label_detectron_large.lmdb,/data/fcy/sal/data/datasets/stvqa/ocr_en/features/amazon_frcnn_latr_stvqa_high.lmdb
+ 
       val:
-      - stvqa/defaults/features/detectron.lmdb,stvqa/ocr_en/features/ocr_en_frcn_features.lmdb
+      - /data/fcy/sal/data/datasets/stvqa/defaults/features/stvqa_label_detectron_large.lmdb,/data/fcy/sal/data/datasets/stvqa/ocr_en/features/amazon_frcnn_latr_stvqa_high.lmdb
       test:
-      - stvqa/defaults/features/detectron.lmdb,stvqa/ocr_en/features/ocr_en_frcn_features.lmdb
+      - /data/fcy/sal/data/datasets/stvqa/defaults/features/stvqa_label_detectron_large.lmdb,/data/fcy/sal/data/datasets/stvqa/ocr_en/features/amazon_frcnn_latr_stvqa_high.lmdb
+    annotations:
+
+   
+      train:
+      - /data/fcy/sal/data/stvqa/st-vqa/stvqa_latr_large/train_amazon_ocr.npy
+
+      val:
+      - /data/fcy/sal/data/stvqa/st-vqa/stvqa_latr_large/val_amazon_ocr.npy
+      test:
+      - /data/fcy/sal/data/stvqa/st-vqa/stvqa_latr_large/test_amazon_ocr.npy
+    max_features: 512
     processors:
-      text_processor:
-        type: bert_tokenizer
-        params:
-          tokenizer_config:
-            type: bert-base-uncased
-            params:
-              do_lower_case: true
-          max_seq_length: 20
       answer_processor:
-        type: m4c_answer
+        type: latr_answer
         params:
           vocab_file: /data/fcy/sal//fixed_answer_vocab_stvqa_5k.txt
           preprocessor:
@@ -34,29 +40,20 @@ dataset_config:
           context_preprocessor:
             type: simple_word
             params: {}
-          max_length: 50
-          max_copy_steps: 12
+          max_length: 512
+          max_copy_steps: 24
           num_answers: 10
       copy_processor:
         type: copy
         params:
-          max_length: 100
-      phoc_processor:
-        type: phoc
-        params:
-          max_length: 50
-      context_processor:
-        type: fasttext
-        params:
-          max_length: 50
-          model_file: wiki.en.bin
+          max_length: 512
       ocr_token_processor:
         type: simple_word
         params: {}
       bbox_processor:
         type: bbox
         params:
-          max_length: 50
+          max_length: 512
     return_features_info: true
     use_ocr: true
     use_ocr_info: true
@@ -80,13 +77,13 @@ training:
     max_grad_l2_norm: 0.25
     lr_scheduler: true
     lr_steps:
-    - 14000
-    - 19000
+    - 40000
+    - 60000
     lr_ratio: 0.1
     use_warmup: true
     warmup_factor: 0.2
     warmup_iterations: 1000
-    max_updates: 24000
+    max_updates: 80000
     batch_size: 128
     num_workers: 4
     task_size_proportional_sampling: true

@@ -28,14 +28,14 @@ dataset_config:
           vocab:
             type: intersected
             embedding_name: glove.6B.300d
-            vocab_file: stvqa/defaults/extras/vocabs/vocabulary_100k.txt
+            vocab_file: /data/fcy/sal//vocabulary_100k.txt
           preprocessor:
             type: simple_sentence
             params: {}
       answer_processor:
         type: vqa_answer
         params:
-          vocab_file: stvqa/defaults/extras/vocabs/fixed_answer_vocab_stvqa_5k.txt
+          vocab_file: /data/fcy/sal//fixed_answer_vocab_stvqa_5k.txt
           preprocessor:
             type: simple_word
             params: {}

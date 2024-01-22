@@ -1,0 +1,94 @@
+model_config:
+  sal:
+    pretrain: False
+    losses:
+    - type: m4c_decoding_bce_with_mask
+
+dataset_config:
+  sal_textvqa:
+    pretrain: False
+    features:
+      train:
+      - /data/fcy/sal/data/textvqa/new_label_textvqa_obj_round.lmdb,/data/fcy/sal/data/textvqa/ocr_en/features/amazon_frcnn_latr1110.lmdb
+      - /data/fcy/sal/data/stvqa/defaults/features/label_detectron.lmdb,/data/fcy/sal/data/datasets/stvqa/ocr_en/features/amazon_frcnn_latr_stvqa_high.lmdb
+      val:
+      - /data/fcy/sal/data/textvqa/new_label_textvqa_obj_round.lmdb,/data/fcy/sal/data/textvqa/ocr_en/features/amazon_frcnn_latr1110.lmdb
+      test:
+      - /data/fcy/sal/data/textvqa/new_label_textvqa_obj_round.lmdb,/data/fcy/sal/data/textvqa/ocr_en/features/amazon_frcnn_latr1110.lmdb
+    
+    annotations:
+        train:
+        - /data/fcy/sal/data/textvqa/defaults/annotations/train_amazon_ocr.npy
+        - /data/fcy/sal/data/stvqa/defaults/annotations/train_amazon_ocr.npy
+        val:
+        - /data/fcy/sal/data/textvqa/defaults/annotations/val_amazon_ocr.npy
+        test:
+        - /data/fcy/sal/data/textvqa/defaults/annotations/test_amazon_ocr.npy
+    max_features: 512
+    
+    processors:
+      answer_processor:
+        type: latr_answer
+        params:
+          vocab_file: /data/fcy/sal/fixed_answer_vocab_textvqa_5k.txt
+          preprocessor:
+            type: simple_word
+            params: {}
+          context_preprocessor:
+            type: simple_word
+            params: {}
+          max_length: 512
+          max_copy_steps: 24
+          num_answers: 10
+      copy_processor:
+        type: copy
+        params:
+          max_length: 512
+      ocr_token_processor:
+        type: simple_word
+        params: {}
+      bbox_processor:
+        type: bbox
+        params:
+          max_length: 512
+    return_features_info: true
+    use_ocr: true
+    use_ocr_info: true
+    use_order_vectors: true
+
+optimizer:
+  params:
+    eps: 1.0e-08
+    lr: 1e-4
+    weight_decay: 0
+  type: Adam
+
+evaluation:
+  metrics:
+  - sal_textvqa_accuracy
+
+
+# scheduler:
+#   type: warmup_linear
+#   params:
+#     num_warmup_steps: 1000
+#     num_training_steps: 60000
+training:
+    clip_norm_mode: all
+    clip_gradients: true
+    max_grad_l2_norm: 0.25
+    lr_scheduler: true
+    lr_steps:
+    - 16000
+    - 35000
+    lr_ratio: 0.1
+    use_warmup: true
+    warmup_factor: 0.2
+    warmup_iterations: 1000
+    max_updates: 60000
+    batch_size: 128
+    num_workers: 4
+    task_size_proportional_sampling: true
+    early_stop:
+      criteria: sal/sal_textvqa_accuracy
+      minimize: false

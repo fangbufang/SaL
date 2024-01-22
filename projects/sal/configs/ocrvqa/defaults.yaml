@@ -4,17 +4,17 @@ model_config:
     - type: m4c_decoding_bce_with_mask
 
 dataset_config:
-  stvqa:
+  ocrvqa:
     zoo_requirements:
-    - stvqa.defaults
-    - stvqa.ocr_en
+    - ocrvqa.defaults
+    - ocrvqa.ocr_en
     features:
       train:
-      - stvqa/defaults/features/detectron.lmdb,stvqa/ocr_en/features/ocr_en_frcn_features.lmdb
+      - ocrvqa/defaults/features/detectron.lmdb,ocrvqa/ocr_en/features/ocr_en_frcn_features.lmdb
       val:
-      - stvqa/defaults/features/detectron.lmdb,stvqa/ocr_en/features/ocr_en_frcn_features.lmdb
+      - ocrvqa/defaults/features/detectron.lmdb,ocrvqa/ocr_en/features/ocr_en_frcn_features.lmdb
       test:
-      - stvqa/defaults/features/detectron.lmdb,stvqa/ocr_en/features/ocr_en_frcn_features.lmdb
+      - ocrvqa/defaults/features/detectron.lmdb,ocrvqa/ocr_en/features/ocr_en_frcn_features.lmdb
     processors:
       text_processor:
         type: bert_tokenizer
@@ -27,7 +27,7 @@ dataset_config:
       answer_processor:
         type: m4c_answer
         params:
-          vocab_file: /data/fcy/sal//fixed_answer_vocab_stvqa_5k.txt
+          vocab_file: ocrvqa/defaults/extras/vocabs/fixed_answer_vocab_ocrvqa_82.txt
           preprocessor:
             type: simple_word
             params: {}
@@ -71,8 +71,7 @@ optimizer:
 
 evaluation:
   metrics:
-  - stvqa_accuracy
-  - stvqa_anls
+  - ocrvqa_accuracy
 
 training:
     clip_norm_mode: all
@@ -80,16 +79,16 @@ training:
     max_grad_l2_norm: 0.25
     lr_scheduler: true
     lr_steps:
-    - 14000
-    - 19000
+    - 28000
+    - 38000
     lr_ratio: 0.1
     use_warmup: true
     warmup_factor: 0.2
     warmup_iterations: 1000
-    max_updates: 24000
+    max_updates: 48000
     batch_size: 128
     num_workers: 4
     task_size_proportional_sampling: true
     early_stop:
-      criteria: stvqa/stvqa_accuracy
+      criteria: ocrvqa/ocrvqa_accuracy
       minimize: false

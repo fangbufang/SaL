@@ -80,7 +80,7 @@ optimizer:
 
 evaluation:
   metrics:
-  - latr_accuracy
+  - sal_textvqa_accuracy
 
 
 scheduler:
@@ -105,5 +105,5 @@ training:
     num_workers: 4
     task_size_proportional_sampling: true
     early_stop:
-      criteria: latr/latr_accuracy
+      criteria: latr/sal_textvqa_accuracy
       minimize: false
